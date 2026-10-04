@@ -3,7 +3,7 @@
     "name": "Modes",
     "description": "Android-style Modes: bundle Do Not Disturb, theme, night light, power profile and more into modes you switch on manually or on a schedule",
     "version": "0.1.0",
-    "author": "Nick Chartier",
+    "author": "l3all",
     "type": "composite",
     "capabilities": ["daemon", "dankbar-widget", "control-center"],
     "icon": "routine",
