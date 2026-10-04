@@ -2,7 +2,7 @@
     "id": "modes",
     "name": "Modes",
     "description": "Android-style Modes: bundle Do Not Disturb, theme, night light, power profile and more into modes you switch on manually or on a schedule",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "author": "Nicolas Chartier",
     "type": "composite",
     "capabilities": ["daemon", "dankbar-widget", "control-center"],
@@ -12,6 +12,6 @@
         "widget": "./ModesWidget.qml"
     },
     "settings": "./ModesSettings.qml",
-    "requires_dms": ">=1.5.0",
+    "requires_dms": ">=1.6.0",
     "permissions": ["settings_read", "settings_write"]
 }

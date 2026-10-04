@@ -27,16 +27,6 @@ PluginComponent {
 
     property bool _loaded: false
 
-    readonly property string statePath: Paths.strip(Paths.state) + "/modes-state.json"
-
-    FileView {
-        id: stateFile
-        path: root.statePath
-        blockLoading: true
-        atomicWrites: true
-        printErrors: false
-    }
-
     Component.onCompleted: {
         loadState();
         PluginService.setGlobalVar(pluginId || "modes", "engine", root);
@@ -307,28 +297,25 @@ PluginComponent {
 
     // --- Persistence & sharing -------------------------------------------------
 
+    // Runtime state lives in DMS's per-plugin state store, not in plugin settings.
     function loadState() {
-        try {
-            const text = stateFile.text();
-            if (!text)
-                return;
-            const s = JSON.parse(text);
-            active = s.active || {};
-            snoozed = s.snoozed || {};
-            snapshot = s.snapshot || {};
-            applied = s.applied || {};
-        } catch (e) {
-            console.warn("Modes: failed to read state:", e);
-        }
+        const s = PluginService.loadPluginState(pluginId || "modes", "engine", null);
+        if (!s)
+            return;
+        active = s.active || {};
+        snoozed = s.snoozed || {};
+        snapshot = s.snapshot || {};
+        applied = s.applied || {};
     }
 
     function saveState() {
-        stateFile.setText(JSON.stringify({
+        // Deep copy so the cached state can't alias objects the engine replaces later.
+        PluginService.savePluginState(pluginId || "modes", "engine", JSON.parse(JSON.stringify({
             active: active,
             snoozed: snoozed,
             snapshot: snapshot,
             applied: applied
-        }, null, 2));
+        })));
     }
 
     function publish() {

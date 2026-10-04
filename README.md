@@ -53,7 +53,7 @@ dms ipc call modes offAll
 | `ModesSettings.qml` | Mode editor |
 | `ModesLogic.js` | Pure helpers: defaults, schedule windows, effect merging |
 
-Mode definitions are saved in DMS plugin settings. Runtime state (active modes and the saved values to restore) lives in `~/.local/state/DankMaterialShell/modes-state.json`.
+Mode definitions are saved in DMS plugin settings. Runtime state (active modes and the saved values to restore) is kept in DMS's per-plugin state store, `~/.local/state/DankMaterialShell/plugins/modes_state.json`.
 
 During development, `dms ipc call plugins reload modes` reloads the bar widget and the daemon. DMS caches the settings page and `ModesLogic.js` until the shell restarts, so run `dms restart` after changing those.
 
