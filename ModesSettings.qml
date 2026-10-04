@@ -170,7 +170,7 @@ PluginSettings {
                     // Header
                     Item {
                         width: parent.width
-                        height: 40
+                        height: Theme.iconSize + Theme.spacingL
 
                         DankIcon {
                             id: headerIcon
@@ -296,9 +296,9 @@ PluginSettings {
                                     Rectangle {
                                         required property int modelData
                                         readonly property bool selected: card.mode.days.indexOf(modelData) !== -1
-                                        width: 40
-                                        height: 40
-                                        radius: 20
+                                        width: Theme.iconSize + Theme.spacingL
+                                        height: width
+                                        radius: width / 2
                                         color: selected ? Theme.primary : Theme.surfaceContainerHighest
 
                                         StyledText {
@@ -464,8 +464,8 @@ PluginSettings {
                         DankButton {
                             text: "Delete mode"
                             iconName: "delete"
-                            backgroundColor: Theme.error
-                            textColor: Theme.errorText
+                            backgroundColor: Theme.surfaceContainerHighest
+                            textColor: Theme.error
                             onClicked: root.removeMode(card.mode.id)
                         }
                     }

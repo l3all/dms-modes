@@ -218,14 +218,14 @@ PluginComponent {
             if (!(key in nextSnapshot))
                 nextSnapshot[key] = readEffect(key);
             if (applied[key] !== desired[key])
-                writeEffect(key, desired[key]);
+                safeWriteEffect(key, desired[key]);
             nextApplied[key] = desired[key];
         }
 
         for (const key in nextSnapshot) {
             if (key in desired)
                 continue;
-            writeEffect(key, nextSnapshot[key]);
+            safeWriteEffect(key, nextSnapshot[key]);
             delete nextSnapshot[key];
         }
 
@@ -255,6 +255,15 @@ PluginComponent {
         return undefined;
     }
 
+    // One failing effect must not abort the rest of a commit (snapshot, hooks, state save).
+    function safeWriteEffect(key, value) {
+        try {
+            writeEffect(key, value);
+        } catch (e) {
+            console.warn("Modes: failed to apply", key, "=", value, ":", e);
+        }
+    }
+
     function writeEffect(key, value) {
         switch (key) {
         case "dnd":
@@ -269,10 +278,10 @@ PluginComponent {
             }
             break;
         case "nightLight":
-            if (value === "on" && !DisplayService.nightModeEnabled)
-                DisplayService.enableNightMode();
-            else if (value === "off" && DisplayService.nightModeEnabled)
-                DisplayService.disableNightMode();
+            // toggleNightMode() exists on DisplayService in every DMS version;
+            // enable/disable moved to NightModeService after 1.6.
+            if ((value === "on") !== DisplayService.nightModeEnabled)
+                DisplayService.toggleNightMode();
             break;
         case "powerProfile":
             if (value && PowerProfileWatcher.available)

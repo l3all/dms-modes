@@ -57,12 +57,10 @@ PluginComponent {
         repeat: true
         onTriggered: {
             const modal = PopoutService.settingsModal;
-            if (modal) {
+            if (modal || ++attempts > 30)
+                stop();
+            if (typeof modal?.openPluginSettings === "function")
                 modal.openPluginSettings(root.pluginId || "modes");
-                stop();
-            } else if (++attempts > 30) {
-                stop();
-            }
         }
     }
 
@@ -107,7 +105,10 @@ PluginComponent {
             engine.activate(modes[0].id, 0);
     }
 
-    ccDetailHeight: Math.min(modes.length, 5) * 64 + 40 + Theme.spacingM * 2
+    // Approximate row and link heights; the detail panel scrolls if rows wrap.
+    readonly property real rowHeight: Theme.iconSize + Theme.spacingM * 3
+    readonly property real linkHeight: Theme.iconSize + Theme.spacingS
+    ccDetailHeight: Math.min(modes.length, 5) * (rowHeight + Theme.spacingXS) + linkHeight + Theme.spacingM * 2
     ccDetailContent: Component {
         Rectangle {
             implicitHeight: ccList.implicitHeight + Theme.spacingM * 2
@@ -255,15 +256,15 @@ PluginComponent {
         property var mode
         readonly property bool on: host.active[mode.id] !== undefined
 
-        height: 60
+        height: Math.max(row.host.rowHeight, textColumn.implicitHeight + Theme.spacingM * 2)
         radius: Theme.cornerRadius
         color: on ? Theme.withAlpha(Theme.primary, 0.16) : (rowArea.containsMouse ? Theme.surfaceContainerHighest : Theme.surfaceContainer)
 
         Rectangle {
             id: iconBubble
-            width: 36
-            height: 36
-            radius: 18
+            width: Theme.iconSize + Theme.spacingM
+            height: width
+            radius: width / 2
             anchors.left: parent.left
             anchors.leftMargin: Theme.spacingM
             anchors.verticalCenter: parent.verticalCenter
@@ -272,18 +273,19 @@ PluginComponent {
             DankIcon {
                 anchors.centerIn: parent
                 name: row.mode.icon
-                size: Theme.iconSize - 2
+                size: Theme.iconSize - Theme.spacingXXS
                 color: row.on ? Theme.primaryText : Theme.surfaceText
             }
         }
 
         Column {
+            id: textColumn
             anchors.left: iconBubble.right
             anchors.leftMargin: Theme.spacingM
             anchors.right: toggle.left
             anchors.rightMargin: Theme.spacingS
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 2
+            spacing: Theme.spacingXXS
 
             StyledText {
                 width: parent.width
@@ -326,7 +328,7 @@ PluginComponent {
         property var host
 
         implicitWidth: linkRow.implicitWidth
-        implicitHeight: 32
+        implicitHeight: link.host.linkHeight
         width: implicitWidth
         height: implicitHeight
 
