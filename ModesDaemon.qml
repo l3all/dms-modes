@@ -135,6 +135,17 @@ PluginComponent {
 
         for (const id in next) {
             const mode = modes.find(m => m.id === id);
+            const info = next[id];
+            // Follow schedule edits: scheduled runs track the current window, and an
+            // "until off" manual run ends with the window it's inside (as on Android).
+            const windowEnd = mode ? Logic.scheduleWindowEnd(mode, now) : 0;
+            if (mode && info.source === "schedule" && info.until !== windowEnd) {
+                next[id] = Object.assign({}, info, { until: windowEnd > 0 ? windowEnd : now });
+                changed = true;
+            } else if (mode && info.source === "manual" && info.until === 0 && windowEnd > 0) {
+                next[id] = Object.assign({}, info, { until: windowEnd });
+                changed = true;
+            }
             if (!mode || (next[id].until > 0 && next[id].until <= now)) {
                 delete next[id];
                 changed = true;
