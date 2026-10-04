@@ -1,5 +1,7 @@
 # Modes
 
+![Modes popout](screenshot.png)
+
 A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin modelled on Android's **Modes**. A mode is a named bundle of system changes. You can turn it on by hand, for a set time, or on a schedule.
 
 ## Features
@@ -54,3 +56,7 @@ dms ipc call modes offAll
 Mode definitions are saved in DMS plugin settings. Runtime state (active modes and the saved values to restore) lives in `~/.local/state/DankMaterialShell/modes-state.json`.
 
 During development, `dms ipc call plugins reload modes` reloads the bar widget and the daemon. DMS caches the settings page and `ModesLogic.js` until the shell restarts, so run `dms restart` after changing those.
+
+## License
+
+MIT © Nicolas Chartier
