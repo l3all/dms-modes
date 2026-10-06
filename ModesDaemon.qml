@@ -234,7 +234,7 @@ PluginComponent {
         case "powerProfile":
             return typeof PowerProfiles !== "undefined" ? PowerProfileWatcher.profileSlug(PowerProfiles.profile) : "";
         case "idleInhibit":
-            return SessionData.idleInhibited;
+            return SessionService.idleInhibited;
         case "mute":
             return AudioService.sink?.audio?.muted ?? false;
         case "audioOutput":
@@ -278,7 +278,12 @@ PluginComponent {
                 PowerProfileWatcher.applyProfile(PowerProfileWatcher.parseProfileSlug(value));
             break;
         case "idleInhibit":
-            SessionData.setIdleInhibited(!!value);
+            // SessionService holds the live inhibitor that IdleService gates on;
+            // SessionData.idleInhibited is only the persisted flag it restores from.
+            if (value)
+                SessionService.enableIdleInhibit();
+            else
+                SessionService.disableIdleInhibit();
             break;
         case "mute":
             if (AudioService.sink?.audio)
