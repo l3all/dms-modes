@@ -4,6 +4,8 @@
 
 A [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell) plugin modelled on Android's **Modes**. A mode is a named bundle of system changes. You can turn it on by hand, for a set time, or on a schedule.
 
+> **Using Omarchy?** There is a port for the Omarchy shell: [omarchy-modes](https://github.com/l3all/omarchy-modes).
+
 ## Features
 
 - **Default modes:** Do Not Disturb, Bedtime, Focus and Gaming. You can edit them, reorder them, delete them or add your own.
